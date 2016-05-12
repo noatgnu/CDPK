@@ -1,0 +1,597 @@
+body{
+margin: 0;
+padding: 0;
+font: normal 90% "Lucida Grande", "Trebuchet MS", Verdana, Helvetica, sans-serif;
+background-color: white;
+}
+
+code.blockcode{
+display: block;
+padding: 5px;
+border: 1px solid gray;
+width: 400px;
+background-color: white;
+}
+
+code{
+background-color: lightyellow;
+}
+
+pre, p.codearea{
+background-color: #EFEFEF;
+font-size: 13px;
+width: 98%;
+border: 1px dashed gray;
+padding: 5px;
+}
+
+p.codearea{
+margin: 10px 0;
+}
+
+textarea.codecontainer{
+border: 1px dashed gray;
+width: 98%;
+height: 150px;
+background-color: #EFEFEF;
+margin-top: 1em;
+clear: left;
+padding-left: 5px;
+}
+
+.selectcode{
+margin-top: 1em;
+}
+
+.selectcode a.tabs{
+border: 1px solid gray;
+border-bottom-width: 0;
+padding: 0 4px;
+text-decoration: none;
+color: navy;
+margin-right: 3px;
+}
+
+.selectcode a.tabs:visited, .selectcode a.tabs:active{
+color: navy;
+}
+
+.selectcode a.tabs:hover{
+background-color: #EFEFEF;
+color: navy;
+}
+
+.submitform p{
+margin: 10px 0;
+}
+
+.submitform .inputbox{
+width: 300px;
+border: 1px solid gray;
+}
+
+
+.submitform textarea{
+width: 450px;
+height: 150px;
+border: 1px solid gray;
+}
+
+
+.submitform .formbuttons{
+border: 1px solid black;
+}
+
+.codetitle{
+padding-left: 19px;
+background: white url(squarebullet2.png) center left no-repeat;
+}
+
+.codeimages img{
+border: 1px dashed gray;
+margin-right: 8px;
+}
+
+a:link    { color: #aa2716}
+a:visited { color: #821F11}  
+a:hover, a:active  { color: red;}
+
+a:link    { color: #d82412}
+
+a:visited { color: #a12115}
+
+
+.maincontainer{
+width: 860px;
+padding-left: 5px;
+margin-left: auto;
+margin-right: auto;
+background-color: white;
+border: 2px solid #e0e0e0;
+border-width: 0 2px;
+}
+
+* html #.maincontainer{ /*IE only */
+width: 845px; /*IE 5*/
+w\idth: 860px; /*IE 6*/
+}
+
+
+.header{
+font-size: 120%;
+font-weight: bold;
+margin-bottom: 10px;
+}
+
+.comment{
+background-color: #ececec;
+width: 460px;
+padding: 10px;
+}
+
+.commentfooter{
+background: url(arrow.gif) 20px 0 no-repeat;
+padding-left: 58px;
+padding-top: 1px;
+margin-bottom: 2em;
+font-size: 90%;
+color: #4A4A4A;
+}
+
+/* ######### Top Section ######### */
+
+#topbar{
+background-color: black;
+color: black;
+background: #ecf0fc url(topgradient.jpg) top left repeat-x;
+}
+
+#logodiv{
+width: 350px;
+}
+
+#logodiv img{
+padding: 10px;
+}
+
+#toprightdiv{
+width: 350px;
+font: bold 11px arial, sans-serif;
+float: right;
+text-align: right;
+margin: 10px 8px 0 0;
+}
+
+
+#toprightdiv a{
+text-decoration: none;
+color: navy;
+margin-right: 4px;
+letter-spacing: 0.1pt;
+}
+
+#toprightdiv a:hover{
+color: blue;
+}
+
+#toprightdiv #topform{
+margin: 0;
+padding: 0;
+margin-bottom: 5px;
+}
+
+#toprightdiv #keywords{
+border: 1px solid gray;
+width: 210px;
+background: #FBFCFA;
+font: 12px verdana, sans-serif;
+color: #443;
+padding: 5px;	outline: none;
+margin-right: 5px;
+}
+
+#toprightdiv #keywords:focus{
+border: 1px solid black;
+}
+
+#toprightdiv #topformbutton { cursor:pointer;  margin-top:5px;  border:outset 1px #ccc; background:#999; font-size: 13px; color:black; font-weight:bold; padding:5px 8px;  background:url(topbar3.jpg) repeat-x left top; padding:1px; }
+
+
+#ddtoptabs{
+width: 870px;
+margin: 0 auto;
+}
+
+#ddtoptabs ul{
+margin: 0;
+padding: 0;
+font: bold 12px Verdana;
+list-style-type: none;
+}
+
+#ddtoptabs li{
+display: inline;
+margin: 0;
+}
+
+#ddtoptabs li a{
+float: left;
+display: block;
+text-decoration: none;
+margin: 0;
+padding: 6px 8px; /*padding inside each tab*/
+
+color: white;
+border: 1px solid #282828;
+border-bottom-width: 0;
+margin-right: 1px;
+background: gray; /*background of tabs (default state)*/
+}
+
+#ddtoptabs li a:visited{
+color: white;
+}
+
+#ddtoptabs li a:hover, .mattblacktabs li.selected a{
+background: #282828; /*background of tabs for hover state, plus tab with "selected" class assigned to its LI */
+border-color: black;
+}
+
+#ddtoptabsline{
+clear: both;
+padding: 0;
+width: 100%;
+height: 8px;
+line-height: 8px;
+background: black;
+}
+
+
+/* ######### Left column ######### */
+
+#leftcolumn{
+background-color: white;
+clear: left;
+width: 158px;
+margin-right: 5px;
+float: left;
+margin-top: 1em;
+}
+
+.ddmarkermenu{
+list-style-type: none;
+margin: 0;
+margin-bottom: 8px;
+padding: 0;
+}
+
+.ddmarkermenu li{
+padding-bottom: 2px;
+}
+
+.ddmarkermenu li a{
+color: #aa2716;
+background: url(arrowbullet.png) no-repeat center left;
+display: block;
+padding: 2px 0;
+padding-left: 19px;
+text-decoration: none;
+font-weight: bold;
+border-bottom: 1px solid #dadada;
+font-size: 90%;
+}
+
+.ddmarkermenu li a:visited{
+color: #aa2716;
+}
+
+.ddmarkermenu a:hover{
+background-color: #F3F3F3;
+color: #aa2716;
+}
+
+.listmenu{
+list-style-type: none;
+margin: 0;
+margin-bottom: 8px;
+padding: 0;
+}
+
+.listmenu li{
+padding-bottom: 2px;
+}
+
+.listmenu li a{
+text-decoration: none;
+background: url(bullet.png) no-repeat center left;
+padding-left: 19px;
+display: block;
+font-size: 90%;
+border-bottom: 1px solid #dadada;
+}
+
+.listmenu a:hover {
+background-color: #F3F3F3;
+}
+
+.listmenu2 li a{
+background: url(commentbullet.png) no-repeat top left;
+}
+
+#leftcolumn .titlebar{
+font-weight: bold;
+background: black url(titlebg.jpg) repeat-x top left;
+color: white;
+border-bottom: 1px solid #7b9bc4;
+margin: 1em 0;
+text-transform: uppercase;
+padding: 2px;
+padding-left: 10px;
+}
+
+/* ######### Middle column ######### */
+
+#middlecolumn{
+background-color: transparent;
+width: 497px;
+float: left;
+border-left: 1px solid #C3C3C3;
+padding-left: 10px;
+padding-right: 10px;
+margin-top: 1em;
+padding-bottom: 1em;
+}
+
+
+.headers{
+border: 1px solid #BBB;
+width: 99%;
+background: url(chromebg.gif) center center repeat-x;
+margin-left: 0;
+padding: 2px 0 2px 5px;
+text-align: left;
+font-size: 120%;
+}
+
+.headers img{
+float: right;
+margin-right: 5px;
+padding-top: 5px;
+}
+
+
+.headers span, .headers a.bar{
+padding: 5px 0;
+padding-left: 0;
+}
+
+.headers a.bar{
+/*background: transparent url(arrowbullet2.gif) no-repeat center right;*/
+text-decoration: none;
+/*padding-right: 18px;*/
+color: #273565;
+}
+
+.headers a:visited, .headers a:active{
+color: #273565;
+}
+
+.headers a:hover{
+color: blue;
+}
+
+.screenshots{
+float: left;
+width: 150px;
+margin-right: 10px;
+margin-bottom: 1em;
+font-size: 90%;
+}
+
+html>body .screenshots{ /*Non IE rule*/
+margin-right: 15px;
+}
+
+.screenshots div{
+background: white url(thumbback.jpg) top left no-repeat;
+padding: 2px 7px 5px 2px;
+}
+
+.screenshots div a img{
+border: 1px solid gray;
+}
+
+
+.screenshots a:hover img{
+border-color: black;
+}
+
+.screenshots a:hover{ /*IE fix*/
+color: black;
+}
+
+.screenshots a{
+text-decoration: none;
+padding-left: 3px;
+}
+
+.csslisting{
+clear: left;
+margin-bottom: 20px;
+}
+
+.csslisting .floatbox{
+float: left;
+background: white url(thumbback.jpg) no-repeat top left;
+width: 155px;
+}
+
+.csslisting .floatbox img{
+border: 1px solid gray;
+margin-bottom: 10px;
+}
+
+.csslisting .floatbox a:hover img{
+border-color: black;
+}
+
+.csslisting .floatbox a:hover{ /*IE fix*/
+color: gray;
+}
+ 
+* html .csslisting .floatbox{ /* IE 3px hack*/
+width: 152px
+}
+ 
+* html .csslisting p{ /* IE 3px hack*/
+height: 1%;
+}
+ 
+
+.csslisting p{
+margin-left: 155px;
+font-size: 90%;
+}
+
+* html .csslisting p{ /* IE offset to the left 3px hack*/
+margin-left: 152px;
+}
+
+.csslisting p b{
+font-size: 110%;
+}
+
+#blogcontainer{
+font-size: 90%;
+border-bottom: 1px solid #D8D8D8;
+}
+
+#blogcontainer .title{
+margin-top: 10px;
+margin-bottom: 0;
+padding: 0;
+}
+
+#blogcontainer .info{
+color: gray;
+margin-top: 1px;
+}
+
+#blogcontainer p{
+margin: 8px 0;
+}
+
+div.info + p:first-letter{
+font-size:;
+float:left;
+font: bold 180% Arial;
+margin-right: 3px;
+}
+
+
+/* ######### Right column ######### */
+
+#rightcolumn{
+background-color: white;
+width: 170px;
+float: left;
+margin-top: 1em;
+}
+
+#middlecolumn .titlebar, #rightcolumn .titlebar{
+font-weight: bold;
+margin: 1em 0;
+text-transform: uppercase;
+letter-spacing: 1.5pt;
+color: #686868;
+font-size: 110%;
+padding-left: 18px;
+border-bottom: 1px solid #dadada;
+background: white url(squarebullet.png) center left no-repeat
+}
+
+#rightcolumn .titlebar{
+margin-top: 10px;
+}
+
+#rightcolumn .newscontainer{
+border: 1px solid #dadada;
+background-color: lightyellow;
+margin-bottom: 1em;
+padding: 5px;
+font-size: 90%;
+}
+
+
+/* ######### Site Footer ######### */
+
+#contentfooter{
+font-size: 11px;
+font-family: Verdana;
+padding-bottom: 1em;
+margin-left: 173px;
+clear: both;
+}
+
+#footerarea{
+clear: left;
+background: #ecf0fc url(footer.jpg) top left repeat-x;
+padding-top: 15px;
+text-align: center;
+height: 50px;
+}
+
+
+#footermenu{
+margin: 0;
+padding: 0;
+float: right;
+font-size: 90%;
+}
+
+#footermenu ul{
+margin: 0;
+padding-left: 0;
+float: left;
+font-weight: bold;
+border: 1px solid #DFDFDF;
+border-width: 1px 0;
+}
+
+#footermenu ul li{
+display: inline;
+}
+
+
+#footermenu ul li a{
+float: left;
+color: gray;
+font-weight: bold;
+padding: 2px 6px 4px 6px;
+text-decoration: none;
+background: #f3f5fb url(menudivide.gif) top right repeat-y;
+}
+
+#footermenu ul li a:hover{
+color: #565656;
+background-color: #F3F3F3;
+border-bottom: 4px solid gray;
+padding-bottom: 0;
+}
+
+
+.clearfix:after{ /*Clear floats hack: http://positioniseverything.net/easyclearing.html*/
+content: "."; 
+display: block; 
+height: 0; 
+clear: both; 
+visibility: hidden;
+}
+
+.clearfix {display: inline-table;}
+/* Hides from IE-mac \*/
+* html .clearfix {height: 1%;}
+.clearfix {display: block;}
+/* End hide from IE-mac */
+
+

@@ -1,0 +1,49 @@
+﻿{% extends "layout.html"%}
+
+{% block title %}{{title}}{% end %}
+{% block content %}
+<h4>Choose File</h4>
+<form target="_blank" action="/go/process" method="POST" enctype="multipart/form-data">
+    <p>
+        <table border="0" width="200">
+			<tr><td width="200"><span class=caption>Study sample:</span><br />
+			    <input type="file" name="study" id="file" required/>
+			</td>
+			<td>
+                <span class=caption>Delimiter:</span><br />
+                <input type="text" class="textinp" name="dstudy" size=1 value=','></td></tr>
+            <tr><td width="200"><span class=caption>Universe sample:</span><br />
+                <input type="file" name="population" id="file" required/>
+            </td>
+		        <td><span class=caption>Delimiter:</span><br />
+                <input type="text" class="textinp" name="duniverse" size=1 value=','></td></tr>
+            <tr><td width="200"><span class=caption>GOID Association:</span><br />
+                <input type="file" name="association" id="file" required/>
+            </td>
+				<td><span class=caption>Delimiter:</span><br />
+                <input type="text" class="textinp" name="dassociation" size=1 value=','></td><br /></tr>
+			</table>
+    </p>
+    <span class=caption>P-value Cutoff:</span><br />
+    <input type="text" class="textinp" name="pvalue" size=2 value='0.05' required><br />
+    <span class=caption>Organism:</span><br />
+    <input type="text" class="textinp" name="organism" style="width:160px; border:single" required><br />
+    <p>
+    <span>Ontology:</span><br>
+			<table border="0" width="200">
+			<tr><td width="100"><span class=caption>MF:</span></td>
+			<td>
+            <input type="checkbox"  name="mf" checked="checked" value="ON"></td></tr>
+            <tr><td width="100"><span class=caption>BP:</span></td>
+					<td>
+            <input type="checkbox"  name="bp" checked="checked" value="ON"></td></tr>
+            <tr><td width="100"><span class=caption>CC:</span></td>
+					<td>
+            <input type="checkbox"  name="cc" checked="checked" value="ON"></td></tr>
+			</table>
+			
+    <input type="submit" value="Upload" class="btn btn-default" />
+    </p>
+</form>
+
+{% end %} 

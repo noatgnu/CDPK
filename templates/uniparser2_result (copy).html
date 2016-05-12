@@ -1,0 +1,12 @@
+﻿{% extends "layout.html"%}
+
+{% block title %}{{title}}{% end %}
+{% block content %}
+<div class="jumbotron">
+    <p>Uniprot Parser Result</p>
+            {% for k in result %}
+            {{k}}
+            <div class="panel-body"><a href={{"/uniprotparser/results/download/"+result[k]}}>{{result[k]}}</a></div>
+            {% end %}
+</div>
+{% end %} 

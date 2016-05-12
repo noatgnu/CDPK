@@ -1,0 +1,29 @@
+﻿{% extends "layout.html"%}
+
+{% block title %}{{title}}{% end %}
+
+{% block content %}
+<div class="jumbotron">
+    <div class="panel-group">
+        
+        {% for key in results %}
+        <div class="panel=heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#collapse1">{{key}}</a>
+            </h4>
+        </div>
+        <div id="collapse1" class="panel-collapse collapse">
+            {% for k,v in excel_list.items() %}
+            {% if k in key %}
+            <div class="panel-body"><a href={{"/sequonparser/results/download/"+v}}>{{v}}</a></div>
+            {% end %}
+            {% end %}
+
+            {% for i in results[key] %}
+            <div class="panel-footer"><a href={{"/sequonparser/results/download/"+i}}>{{i}}</a></div>
+            {% end %}
+        </div>
+        {% end %}
+    </div>
+</div>
+{% end %}

@@ -1,0 +1,61 @@
+﻿{% extends "layout.html"%}
+
+{% block title %}{{title}}{% end %}
+{% block content %}
+<h4>Choose File</h4>
+<form target="_blank" action="/uniparser/process" method="POST" enctype="multipart/form-data">
+    <p>
+        <table border="0" width="200">
+			<tr><td width="200"><span class=caption>Input:</span><br />
+			    <input type="file" name="inputfile" id="file" required/>
+			</td>
+			<td>
+                <span class=caption>Delimiter:</span><br />
+                <input type="text" class="textinp" name="din" size=1 value='\t'></td></tr>
+            </table>
+    </p>
+    <div class="caption"><p>Choose database:</p></div>
+    <select style="width:300px; border:single" name="database">
+	    <optgroup label="Databases:">
+            {% for dboption in dboptions%}
+		        <option>{{dboption}}</option>
+            {% end %}
+		</optgroup>				
+    </select>
+    <p>
+    <span>General Options:</span><br>
+			<table border="0" width="200">
+			<tr><td width="200"><span class=caption>Entry name</span></td>
+			<td>
+            <input type="checkbox"  name="entryname" checked="checked" value="ON"></td></tr>
+            <tr><td width="200"><span class=caption>Protein name</span></td>
+					<td>
+            <input type="checkbox"  name="proteinname" checked="checked" value="ON"></td></tr>
+            <tr><td width="200"><span class=caption>Subcellular location</span></td>
+					<td>
+            <input type="checkbox"  name="subcellularlocation" checked="checked" value="ON"></td></tr>
+            <tr><td width="200"><span class=caption>GO IDs</span></td>
+			<td>
+            <input type="checkbox"  name="goid" checked="checked" value="ON"></td></tr>
+            <tr><td width="200"><span class=caption>GO Terms</span></td>
+					<td>
+            <input type="checkbox"  name="goterm" checked="checked" value="ON"></td></tr>
+            <tr><td width="200"><span class=caption>Sequence</span></td>
+					<td>
+            <input type="checkbox"  name="sequence" checked="checked" value="ON"></td></tr>
+            <tr><td width="200"><span class=caption>Sequence features</span></td>
+					<td>
+            <input type="checkbox"  name="sequencefeatures" checked="checked" value="ON"></td></tr>
+            <tr><td width="200"><span class=caption>Glycosylation sites</span></td>
+					<td>
+            <input type="checkbox"  name="glycosylation" checked="checked" value="ON"></td></tr>
+            <tr><td width="200"><span class=caption>GSSTATS input file</span></td>
+					<td>
+            <input type="checkbox"  name="gsstats" checked="checked" value="ON"></td></tr>
+			</table>
+			
+    <input type="submit" value="Upload" class="btn btn-default" />
+    </p>
+</form>
+
+{% end %} 

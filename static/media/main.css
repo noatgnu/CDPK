@@ -1,0 +1,75 @@
+html, body {
+	height: 100%;
+}
+body {
+	margin: 0;
+	padding: 0;
+   background-image:url('media/background_head.png');
+   background-position: top left;
+   background-repeat: repeat-x;
+ 	background-color:#DEEDEE;
+}
+/* ie8 beta allocates space for the empty <a> tag! this fixes it */
+/* also it doesn't work correctly in Opera and this also fixes that */
+#top {
+	position: absolute;
+}
+/* <h1>, <p> etc throws the height out, so change it to have padding instead of margins to fix it */
+h1, p {
+	margin: 0;
+	padding: 0.3em 0;
+}
+
+#container {
+	min-height: 100%; /* use min-height not height, to prevent overlap */
+	margin-bottom: -50px; /* = #footer height+padding+border, to prevent overlap */
+}
+* html #container {
+	height: 100%; /* ie6 doesn't support min-height, so need to use height */
+}
+
+#footer-spacer {
+	height: 50px; /* = #container margin-bottom plus any extra space required between #container and #footer */
+}
+#footer {
+	border-top: 10px solid #045C97;
+	background-color: #000;
+	height: 40px;
+}
+
+#maincontainer{
+	padding:22px;
+}
+
+#helpdiv {
+        font-family: sans-serif;
+        color: black;
+        font-size: 14px;
+}
+
+.caption{
+	font-family: sans-serif;
+	font-size: 13px;
+	font-weight: bold;
+	color: black;
+}
+
+.indicator{
+	font-family: monospace;
+	font-size: 13px;
+	font-weight: bold;
+	color: black;
+}
+
+.smallcaption{
+	font-family: sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: black;
+}
+
+input.textinp:focus, textarea:focus, select:focus {
+  background-color: #CEECEE;
+  border: 2px solid #045C97;
+}
+

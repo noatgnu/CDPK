@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href={{static_url("content/bootstrap.min.css")}} />
+    <link rel="stylesheet" type="text/css" href={{static_url("content/site.css")}} />
+    <script type="text/javascript" src={{static_url("scripts/modernizr-2.6.2.js")}}></script>
+    <script type="text/javascript" src={{static_url("scripts/jquery-2.2.2.min.js")}}></script>
+    <script type="text/javascript" src={{static_url("scripts/bootstrap.js")}}></script>
+    <script type="text/javascript" src={{static_url("scripts/respond.js")}}></script>
+    <title>{% block title %}Common Data Parsing Toolkit{% end %}</title>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" data-toggle="collapse" data-target=".navbar-collapse" class="navbar-toggle">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button><a href="/" class="navbar-brand">Common Data Parsing Toolkit</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    <li>
+                        <a href="/sequonparser">Sequon Parser</a>
+                    </li>
+                    <li>
+                        <a href="/uniprotparser">Uniprot Parser</a>
+                    </li>
+                    <li>
+                        <a href="/uniparser">Uniprot Parser-EX</a>
+                    </li>
+                    <li>
+                        <a href="/compare">Compare Protein Summaries</a>
+                    </li>
+                    <li>
+                        <a href="/sca">Subcellular Analysis</a>
+                    </li>
+                    <li>
+                        <a href="/go">GO Enrichment</a>
+                    </li>
+                    <li>
+                        <a href="/about">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        {% block content %}
+        Default content.
+        {% end %}
+
+        <hr>
+        <footer>
+            <p>
+                <img src={{static_url("images/Copyleft.svg")}} alt="Copyleft" style="width:14px;height:14px"> 2016 - CDPT
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

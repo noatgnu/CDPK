@@ -1,0 +1,55 @@
+{% extends "layout.html"%}
+
+{% block content %}
+<script>
+$(document).ready(function() {
+    console.log("ready");
+});
+        
+var ws;
+ws = new WebSocket("ws://10.12.98.41:8888/websocket");
+
+ws.onopen = function () {
+    ws.send("{{result}}");
+    document.getElementById('status').innerHTML = "<p><h4>Status: Not finished.</h4></p>";
+    document.title = "Job Started {{result}}";
+};
+
+
+
+ws.onmessage = function (e) {
+    var s = e.data;
+    var data = JSON.parse(s);
+    document.title = "Job Finished";
+    document.getElementById('status').innerHTML = "<p><h4>Status: Finished.</h4></p>"
+    console.log(data)
+    for (var key in data) {
+        if (data.hasOwnProperty(key)) {
+            document.getElementById('results').innerHTML = "<p>" + key + "</p>";
+            var arraylength = data[key].length;
+            for (var i = 0; i < arraylength; i++) {
+                console.log(data[key][i])
+                var res = document.createElement("a");
+                var lin = document.createTextNode(data[key][i]);
+                res.appendChild(lin);
+                res.title = data[key][i];
+                res.href = "/uniprotparser/results/download/"+data[key][i];
+                var lb = document.createElement("br");
+                document.getElementById('results').appendChild(res);
+                document.getElementById('results').appendChild(lb);
+            };
+        };
+    };
+};
+
+</script>
+<div class="jumbotron">
+    <p><h3>Uniprot Parser Result</h3></p>
+    <p><h4>Job: {{result}}</h4></p>
+    <div id="status">
+    </div>
+    <div id="results">
+    <img src={{static_url("images/loader.gif")}} alt="loading..." />
+    </div>
+</div>
+{% end %}

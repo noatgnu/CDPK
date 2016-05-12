@@ -1,0 +1,52 @@
+﻿{% extends "layout.html"%}
+
+{% block title %}{{title}}{% end %}
+
+{% block content %}
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <h2>N-Glycosylation Sequon Parser</h2>
+            <p class="lead">
+                N-Glycosylation Sequon Parser is a tool that can be used to search and identify sequence containing the N-glycosylation sequon in MS peptide summary file. If the summary also includes HexNAc modification, it would try to identify sequence with HexNAc modification. 
+            </p>
+            <p><a href="/sequonparser" class="btn btn-default">Go to &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Uniprot Data Parser</h2>
+            <p class="lead">
+                Uniprot Data Parser is a tool that can be used to search for additional information from the UniprotKB database using a list of Uniprot Accession ID.
+            </p>
+            <p><a href="/uniprotparser" class="btn btn-default">Go to &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Uniprot Data Parser-EX</h2>
+            <p class="lead">
+                Uniprot Data Parser-EX is a tool that can be used to search for additional information from a locally maintained UniprotKB databases using a list of Uniprot Accession ID.
+            </p>
+            <p><a href="/uniparser" class="btn btn-default">Go to &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Compare Protein Summaries</h2>
+            <p class="lead">
+                CPS is a tool that can be used to compare 2 protein summary outputs from mass spectrometry and identifies the differences in proteomic content of the two.
+            </p>
+            <p><a href="/compare" class="btn btn-default">Go to &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Subcellular Analysis</h2>
+            <p class="lead">
+                SCA utilizes information from the Uniprot Parser output together with Peptide Summary information in order to categorize peptides into category according to their subcellular location.
+            </p>
+            <p><a href="/compare" class="btn btn-default">Go to &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>GO Enrichment</h2>
+            <p class="lead">
+                GO Enrichment utility based on GOstats.
+            </p>
+            <p><a href="/go" class="btn btn-default">Go to &raquo;</a></p>
+        </div>
+    </div>
+{% end %}

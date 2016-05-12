@@ -1,0 +1,11 @@
+﻿{% extends "layout.html"%}
+
+{% block title %}{{title}}{% end %}
+{% block content %}
+<div class="jumbotron">
+            {% for result in results %}
+            
+            <div class="panel-body"><a href={{"/go/results/download/"+result}}>{{result}}</a></div>
+            {% end %}
+</div>
+{% end %} 

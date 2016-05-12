@@ -1,0 +1,20 @@
+﻿{% extends "layout.html"%}
+
+{% block title %}{{title}}{% end %}
+{% block content %}
+<div class="jumbotron">
+    <div class="panel-group">
+        <div class="panel=heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#collapse1">Results</a>
+            </h4>
+        </div>
+        <div id="collapse1" class="panel-collapse collapse">
+            {% for result in results %}
+            
+            <div class="panel-body"><a href={{"/compare/results/download/"+result}}>{{result}}</a></div>
+            {% end %}
+        </div>
+    </div>
+</div>
+{% end %} 
