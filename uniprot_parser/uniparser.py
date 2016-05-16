@@ -7,7 +7,9 @@ import re
 from . import settingup
 import MySQLdb
 def allowed_file(filename):
-    split_fn = filename.split('.')[-1]
+    # This function checked the extension of the input file against a list of allowed extensions.
+    # Return True if it was in the list and False if it was not in the list.
+    split_fn = filename.split('.')[-1] # Split filename at the '.' characters and only obtain the final item of the array.
     if split_fn:
        if split_fn in settingup.ALLOWED_EXTENSIONS:
            return 'True'
@@ -16,6 +18,7 @@ def allowed_file(filename):
     return 'False'
 
 def check_column(input_path):
+    # The program tried to discern the column which contain the uniprot accession id. 
     condition = 0
     accession_col_name = ''
     with open(input_path, 'rt') as csvfile:
@@ -23,10 +26,12 @@ def check_column(input_path):
         for row in reader:
             for k in row:
                 if re.search('\|[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}\|', str(row[k])):
+                    # First checking only the first row using regular expression for column containing the text with the id surrounded by 2 '|' separators.
                     accession_col_name = k
                     condition = 1
             if condition == 0:
                 if re.search('^[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}', str(row[k])):
+                    # If the first operation was not true, it checked for column with only the id and no separators.
                     accession_col_name = k
                     condition = 1
             break
@@ -517,9 +522,11 @@ def compdb(filepath='uniprot_sprot.xml.gz', output='compact_uniprot_sprot.xml.gz
                     del elem.getparent()[0]
         outfile.write(b'</uniprot>')
 
-def compdb_sql(filepath='uniprot_sprot.xml.gz', dtype='sp'):
+def compdb_sql(filepath='uniprot_sprot.xml.gz', dtype='sp', compact=True, compact_only=False, taxa_list=['Vertebrata', 'Mammalia', 'Fungi', 'Eukaryota']):
     count = 0
-    p1n = 'compactUniprot'
+    p1n = 'Uniprot'
+    taxa_dict = dict()
+    cn = 'compact'
     ac1 = p1n+dtype+'ACC'
     fn1 = p1n+dtype+'FullName'
     ec1 = p1n+dtype+'EC'
@@ -528,44 +535,55 @@ def compdb_sql(filepath='uniprot_sprot.xml.gz', dtype='sp'):
     go1 = p1n+dtype+'GO'
     ft1 = p1n+dtype+'FT'
     se1 = p1n+dtype+'Seq'
+    tables = []
+    tables = taxa_list
+    for i in taxa_list:
+        taxa_dict[i] = False
+    
+    if compact_only == True:
+        tables = [cn]
+    if compact == True:
+        tables.append(cn)
+        
     dbuser = settingup.DATABASES['default']['USER']
     dbpass = str(settingup.DATABASES['default']['PASSWORD'])
     dbhost = settingup.DATABASES['default']['HOST']
     db = settingup.DATABASES['default']['DB']
     dbcon = MySQLdb.connect(user=dbuser, passwd=dbpass, host=dbhost, db=db)
     cursor = dbcon.cursor()
-    dacc = """DROP TABLE IF EXISTS %s;""" % ac1
-    cursor.execute(dacc)
-    dfn = """DROP TABLE IF EXISTS %s;""" % fn1
-    cursor.execute(dfn)
-    dec = """DROP TABLE IF EXISTS %s;""" % ec1
-    cursor.execute(dec)
-    dorg = """DROP TABLE IF EXISTS %s;""" % or1
-    cursor.execute(dorg)
-    dsubl = """DROP TABLE IF EXISTS %s;""" % sl1
-    cursor.execute(dsubl)
-    dgo = """DROP TABLE IF EXISTS %s;""" % go1
-    cursor.execute(dgo)
-    dft = """DROP TABLE IF EXISTS %s;""" % ft1
-    cursor.execute(dft)
-    dseq = """DROP TABLE IF EXISTS %s;""" % se1
-    cursor.execute(dseq)
-    tbc_acc = """CREATE TABLE IF NOT EXISTS %s (entryName char(20) NOT NULL, accession char(20) NOT NULL);""" % ac1
-    cursor.execute(tbc_acc)
-    tbc_fn = """CREATE TABLE IF NOT EXISTS %s (entryName char(20) NOT NULL, fullName text NOT NULL);""" % fn1
-    cursor.execute(tbc_fn)
-    tbc_ec = """CREATE TABLE IF NOT EXISTS %s (entryName char(20) NOT NULL, EC char(20) NOT NULL);""" % ec1
-    cursor.execute(tbc_ec)
-    tbc_org = """CREATE TABLE IF NOT EXISTS %s (entryName char(20) NOT NULL, organismName text NOT NULL);""" % or1
-    cursor.execute(tbc_org)
-    tbc_sub_loc = """CREATE TABLE IF NOT EXISTS %s (entryName char(20) NOT NULL, subType char(20) NOT NULL, location text NOT NULL);""" % sl1
-    cursor.execute(tbc_sub_loc)
-    tbc_go = """CREATE TABLE IF NOT EXISTS %s (entryNumber int(20) NOT NULL, entryName char(20) NOT NULL, GOID char(20) NOT NULL, evidence char(255) NOT NULL, GOTerm text NOT NULL);""" % go1
-    cursor.execute(tbc_go)
-    tbc_ft = """CREATE TABLE IF NOT EXISTS %s (entryNumber int(20) NOT NULL, entryName char(20) NOT NULL, FTType text NOT NULL, position char(50) NOT NULL, description text NOT NULL);""" % ft1
-    cursor.execute(tbc_ft)
-    tbc_seq = """CREATE TABLE IF NOT EXISTS %s (entryName char(20) NOT NULL, sequence text NOT NULL);""" % se1
-    cursor.execute(tbc_seq)
+    for tax in tables:
+        dacc = """DROP TABLE IF EXISTS """ + tax+ac1
+        cursor.execute(dacc)
+        dfn = """DROP TABLE IF EXISTS """ + tax+fn1
+        cursor.execute(dfn)
+        dec = """DROP TABLE IF EXISTS """ + tax+ec1
+        cursor.execute(dec)
+        dorg = """DROP TABLE IF EXISTS """ + tax+or1
+        cursor.execute(dorg)
+        dsubl = """DROP TABLE IF EXISTS """ + tax+sl1
+        cursor.execute(dsubl)
+        dgo = """DROP TABLE IF EXISTS """ + tax+go1
+        cursor.execute(dgo)
+        dft = """DROP TABLE IF EXISTS """ + tax+ft1
+        cursor.execute(dft)
+        dseq = """DROP TABLE IF EXISTS """ + tax+se1
+        cursor.execute(dseq)
+        tbc_acc = """CREATE TABLE IF NOT EXISTS """+ tax+ac1 +""" (entryName char(20) NOT NULL, accession char(20) NOT NULL);""" 
+        cursor.execute(tbc_acc)
+        tbc_fn = """CREATE TABLE IF NOT EXISTS """+ tax+fn1 +""" (entryName char(20) NOT NULL, fullName text NOT NULL);""" 
+        cursor.execute(tbc_fn)
+        tbc_ec = """CREATE TABLE IF NOT EXISTS """+tax+ec1+""" (entryName char(20) NOT NULL, EC char(20) NOT NULL);""" 
+        cursor.execute(tbc_ec)
+        tbc_org = """CREATE TABLE IF NOT EXISTS """+tax+or1+""" (entryName char(20) NOT NULL, organismName text NOT NULL);""" 
+        cursor.execute(tbc_org)
+        tbc_sub_loc = """CREATE TABLE IF NOT EXISTS """+tax+sl1+""" (entryName char(20) NOT NULL, subType char(20) NOT NULL, location text NOT NULL);"""
+        cursor.execute(tbc_sub_loc)
+        tbc_go = """CREATE TABLE IF NOT EXISTS """+tax+go1+""" (entryName char(20) NOT NULL, GOID char(20) NOT NULL, evidence char(255) NOT NULL, GOTerm text NOT NULL);"""
+        cursor.execute(tbc_go)
+        tbc_ft = """CREATE TABLE IF NOT EXISTS """+tax+ft1+""" (entryName char(20) NOT NULL, FTType text NOT NULL, position char(50) NOT NULL, description text NOT NULL);"""
+        cursor.execute(tbc_ft)
+        tbc_seq = """CREATE TABLE IF NOT EXISTS """+tax+se1+""" (entryName char(20) NOT NULL, sequence text NOT NULL);"""
+        cursor.execute(tbc_seq)
     #sln = 0
     gon = 0
     ftn = 0
@@ -582,8 +600,8 @@ def compdb_sql(filepath='uniprot_sprot.xml.gz', dtype='sp'):
     ins_ec = """ (entryName, EC) VALUES (%s, %s);"""
     ins_org = """ (entryName, organismName) VALUES (%s, %s);"""
     ins_sub_loc = """ (entryName, subType, location) VALUES (%s, %s, %s);"""
-    ins_go = """ (entryNumber, entryName, GOID, evidence, GOTerm) VALUES (%s, %s, %s, %s, %s);"""
-    ins_ft = """ (entryNumber, entryName, FTType, position, description) VALUES (%s, %s, %s, %s, %s);"""
+    ins_go = """ (entryName, GOID, evidence, GOTerm) VALUES (%s, %s, %s, %s);"""
+    ins_ft = """ (entryName, FTType, position, description) VALUES (%s, %s, %s, %s);"""
     ins_seq = """ (entryName, sequence) VALUES (%s, %s);"""
     #with gzip.open(output, 'wb', 9) as outfile:
     found_entry = False
@@ -597,7 +615,7 @@ def compdb_sql(filepath='uniprot_sprot.xml.gz', dtype='sp'):
     dbr_id = False
     found_organism = False
     ns = '{http://uniprot.org/uniprot}'
-    #entry = etree.Element('entry')
+    entry = {'entryName':'', 'accessions':[], 'ec':'', 'fullName':'', 'organismName':'', 'subcellLoc':[], 'go':[], 'ft':[], 'seq':''}
     protein = ''
     recommendedn = ''
     subcellular_loc = ''
@@ -606,11 +624,11 @@ def compdb_sql(filepath='uniprot_sprot.xml.gz', dtype='sp'):
     feature_inf = ''
     position_seq = ''
     access_entry = ''
-    accession_list = []
-    #sl_stuff = ''
-    go_stuff = ''
+    #accession_list = []
+    sl_stuff = {'type':'', 'location':''}
+    go_stuff = {'id':'', 'evidence':'', 'GOTerm':''}
+    ft_stuff = {'type':'', 'position':'', 'description':''}
     
-    posf = ''
     #fieldname = ['accession','entry name','protein name','subcellular location']
     #owriter = csv.DictWriter(outfile, fieldnames=fieldname, dialect='excel', delimiter='\t')
     #owriter.writeheader()
@@ -630,18 +648,19 @@ def compdb_sql(filepath='uniprot_sprot.xml.gz', dtype='sp'):
             
             #accession = etree.SubElement(entry, 'accession')
             #accession.text = elem.text
-            accession_list.append(elem.text)
             
+            entry['accessions'].append(elem.text)
             #print(elem.text)
             #print(etree.tostring(entry))
             relative_pos_name = True
         if elem.tag == ns+'name' and found_entry == True and relative_pos_name == True and event == "end":
             #e_name = etree.SubElement(entry,'name')
             #e_name.text = elem.text
-            access_entry = elem.text
-            for acc in accession_list:
-                cursor.execute(ins_p+ac1+ins_acc, (access_entry, acc,))
-                dbcon.commit()
+            #access_entry = elem.text
+            #for acc in accession_list:
+                #cursor.execute(ins_p+ac1+ins_acc, (access_entry, acc,))
+                #dbcon.commit()
+            entry['entryName'] = elem.text
             relative_pos_name = False
         #if elem.tag == ns+'protein' and found_entry == True and event == "start":
             #protein = etree.SubElement(entry,'protein')
@@ -651,23 +670,31 @@ def compdb_sql(filepath='uniprot_sprot.xml.gz', dtype='sp'):
         if elem.tag == ns+'fullName' and recomname_loc == True and event == "end":
             #fullname = etree.SubElement(recommendedn, 'fullName')
             #fullname.text = elem.text
-            cursor.execute(ins_p+fn1+ins_fn, (access_entry, elem.text))
-            dbcon.commit()
-        if elem.tag == ns+'ecNumber' and recomname_loc == True and event == "end":
+            #cursor.execute(ins_p+fn1+ins_fn, (access_entry, elem.text))
+            #dbcon.commit()
+            entry['fullName'] = elem.text
+            recomname_loc == False
+        if elem.tag == ns+'ecNumber' and found_entry == True and event == "end":
             #ecnm = etree.SubElement(recommendedn, 'ecNumber')
             #ecnm.text = elem.text
-            cursor.execute(ins_p+ec1+ins_ec, (access_entry, elem.text))
-            dbcon.commit()
+            #cursor.execute(ins_p+ec1+ins_ec, (access_entry, elem.text))
+            #dbcon.commit()
+            entry['ec'] = elem.text
         if elem.tag == ns+'recommendedName' and found_entry == True and event == "end":
             recomname_loc = False
         if elem.tag == ns+'organism' and found_entry == True and event == "start":
             found_organism = True
             #organism = etree.SubElement(entry, 'organism')
-        if elem.tag == ns+'name' and found_entry == True and elem.get('type') == 'scientific' and found_organism == True and event == "end":
+        if elem.tag == ns+'name' and compact_only == False and found_entry == True and elem.get('type') == 'scientific' and found_organism == True and event == "end":
             #org_name = etree.SubElement(organism, 'name', {'type':'scientific'})
             #org_name.text = elem.text
-            cursor.execute(ins_p+or1+ins_org, (access_entry, elem.text))
-            dbcon.commit()
+            #cursor.execute(ins_p+or1+ins_org, (access_entry, elem.text))
+            #dbcon.commit()
+            entry['organismName'] = elem.text
+            
+        if elem.tag == ns+'taxon' and found_organism == True and found_entry == True and event == "start" and elem.text in taxa_dict:
+            taxa_dict[elem.text] = True
+        if elem.tag == ns+'organism' and found_entry == True and event == "end":
             found_organism = False
         if elem.tag == ns+'comment' and elem.get('type') == 'subcellular location' and found_entry == True and event == "start":
             sub_loc = True
@@ -681,24 +708,41 @@ def compdb_sql(filepath='uniprot_sprot.xml.gz', dtype='sp'):
             #location = etree.SubElement(subr_loc, 'location')
             #location.text = elem.text
             
-            cursor.execute(ins_p+sl1+ins_sub_loc, (access_entry, 'location', elem.text))
-            dbcon.commit()
+            #cursor.execute(ins_p+sl1+ins_sub_loc, (access_entry, 'location', elem.text))
+            #dbcon.commit()
+            
+            sl_stuff['type'] = 'location'
+            sl_stuff['location'] = elem.text
+            entry['subcellLoc'].append(sl_stuff)
+            for k in sl_stuff:
+                sl_stuff[k] = ''
             
         if elem.tag == ns+'topology' and found_entry == True and sub_loc == True and event == "end":
             #print(elem.text)
             #topology = etree.SubElement(subr_loc, 'topology')
             #topology.text = elem.text
             
-            cursor.execute(ins_p+sl1+ins_sub_loc, (access_entry, 'topology', elem.text))
-            dbcon.commit()
-            
+            #cursor.execute(ins_p+sl1+ins_sub_loc, (access_entry, 'topology', elem.text))
+            #dbcon.commit()
+            sl_stuff['type'] = 'topology'
+            sl_stuff['location'] = elem.text
+            entry['subcellLoc'].append(sl_stuff)
+            for k in sl_stuff:
+                sl_stuff[k] = ''
+                
         if elem.tag == ns+'orientation' and found_entry == True and sub_loc == True and event == "end":
             #print(elem.text)
             #topology = etree.SubElement(subr_loc, 'orientation')
             #topology.text = elem.text
             
-            cursor.execute(ins_p+sl1+ins_sub_loc, (access_entry, 'location', elem.text))
-            dbcon.commit()
+            #cursor.execute(ins_p+sl1+ins_sub_loc, (access_entry, 'location', elem.text))
+            #dbcon.commit()
+            sl_stuff['type'] = 'orientation'
+            sl_stuff['location'] = elem.text
+            entry['subcellLoc'].append(sl_stuff)
+            for k in sl_stuff:
+                sl_stuff[k] = ''
+                
         #if elem.tag == ns+'text' and found_entry == True and sub_loc == True and event == "end":
             #text = etree.SubElement(subcellular_loc, 'text')
             #text.text = elem.text
@@ -717,76 +761,83 @@ def compdb_sql(filepath='uniprot_sprot.xml.gz', dtype='sp'):
             #dbre_at = {'type':elem.get('type'), 'id':elem.get('id')}
             #dbReference = etree.SubElement(entry, 'dbReference', dbre_at)
             
-            go_stuff = gon
-            cursor.execute(ins_p+go1+ins_go, (str(go_stuff), access_entry, elem.get('id'), '', ''))
-            dbcon.commit()
+            if 'id' in elem.attrib:
+                go_stuff['id'] = elem.get('id')
+            #cursor.execute(ins_p+go1+ins_go, (access_entry, elem.get('id'), '', ''))
+            #dbcon.commit()
         if elem.tag == ns+'property' and found_entry == True and goid_loc == True and event == "end":
             #dbre_at = {'type':elem.get('type'), 'value':elem.get('value')}
             #dbrprop = etree.SubElement(dbReference, 'property', dbre_at)
             if elem.get('type') == 'term':
-                cursor.execute(up_p+go1+up_go+str(go_stuff)+';', (elem.get('value'),))
-                dbcon.commit()
+                #cursor.execute(up_p+go1+up_go+str(go_stuff)+';', (elem.get('value'),))
+                #dbcon.commit()
+                go_stuff['GOTerm'] = elem.get('value')
             if elem.get('type') == 'evidence':
                 #print(elem.get('value'))
-                cursor.execute(up_p+go1+up_go2+str(go_stuff)+';', (elem.get('value'),))
-                dbcon.commit()
+                #cursor.execute(up_p+go1+up_go2+str(go_stuff)+';', (elem.get('value'),))
+                #dbcon.commit()
+                go_stuff['evidence'] = elem.get('value')
         if elem.tag == ns+'dbReference' and found_entry == True and elem.get('type') == 'GO' and event == "end":
             goid_loc = False
-            
+            entry['go'].append(go_stuff)
+            for k in go_stuff:
+                go_stuff[k] = ''
         if elem.tag == ns+'feature' and found_entry == True and event == "start":
-            ftn += 1
-            psof = ''
+            #ftn += 1
+            #psof = ''
             feature_loc = True
             #fattribute = dict()
             #fattribute['type'] = elem.get('type')
-            ft_stuff = ftn
-            cursor.execute(ins_p+ft1+ins_ft, (str(ft_stuff), access_entry, elem.get('type'), '', ''))
-            dbcon.commit()
+            ft_stuff['type'] = elem.get('type')
+            #cursor.execute(ins_p+ft1+ins_ft, (str(ft_stuff), access_entry, elem.get('type'), '', ''))
+            #dbcon.commit()
             if 'description' in elem.attrib:
                 #fattribute['description'] = elem.get('description')
-                
-                cursor.execute(up_p+ft1+up_ft2+str(ft_stuff)+';', (elem.get('description'),))
-                dbcon.commit()
+                ft_stuff['description'] = elem.get('description')
+                #cursor.execute(up_p+ft1+up_ft2+str(ft_stuff)+';', (elem.get('description'),))
+                #dbcon.commit()
             #feature_inf = etree.SubElement(entry, 'feature', fattribute)
             
             
         if elem.tag == ns+'location' and found_entry == True and event == "start":
             #position_seq = etree.SubElement(feature_inf, 'location')
             feature_loc_seq = True
-            posf = ''
+            
         if elem.tag == ns+'begin' and found_entry == True and feature_loc_seq == True and event == "end":
             #b_start = dict()
             if not 'position' in elem.attrib:
                 #b_start['status'] = 'unknown'
-                posf = posf + 'unknown'
+                ft_stuff['position'] += 'unknown'
                     
             else:
                 #b_start['position'] = elem.get('position')
-                posf = posf + elem.get('position')
+                ft_stuff['position'] += elem.get('position')
             #b_pos = etree.SubElement(position_seq, 'begin', b_start)
             
         if elem.tag == ns+'end' and found_entry == True and feature_loc_seq == True and event == "end":
             #b_end = dict()
             if not 'position' in elem.attrib:
                 #b_end['status'] = 'unknown'
-                posf = posf + '-unknown'
+                ft_stuff['position'] += '-unknown'
             else:
                 #b_end['position'] = elem.get('position')
-                posf = posf +'-'+ elem.get('position')
-            cursor.execute(up_p+ft1+up_ft+str(ft_stuff)+';', (posf,))
-            dbcon.commit()
+                ft_stuff['position'] += '-'+ elem.get('position')
+            #cursor.execute(up_p+ft1+up_ft+str(ft_stuff)+';', (posf,))
+            #dbcon.commit()
             #e_pos = etree.SubElement(position_seq, 'end', b_end)
             
         if elem.tag == ns+'position' and found_entry == True and feature_loc_seq == True and event == "end":
             #b_direct = dict()
             if not 'position' in elem.attrib:
                 #b_direct['status'] = 'unknown'
-                cursor.execute(up_p+ft1+up_ft+str(ft_stuff)+';', ('unknown',))
-                dbcon.commit()
+                #cursor.execute(up_p+ft1+up_ft+str(ft_stuff)+';', ('unknown',))
+                #dbcon.commit()
+                ft_stuff['position'] = 'unknown'
             else:
                 #b_direct['position'] = elem.get('position')
-                cursor.execute(up_p+ft1+up_ft+str(ft_stuff)+';', (elem.get('position'),))
-                dbcon.commit()
+                #cursor.execute(up_p+ft1+up_ft+str(ft_stuff)+';', (elem.get('position'),))
+                #dbcon.commit()
+                ft_stuff['position'] = elem.get('position')
             #pos = etree.SubElement(position_seq, 'position', b_direct)
             
         if elem.tag == ns+'location' and found_entry == True and event == "end":
@@ -794,7 +845,9 @@ def compdb_sql(filepath='uniprot_sprot.xml.gz', dtype='sp'):
             
         if elem.tag == ns+'feature' and found_entry == True and event == "end":
             feature_loc = False
-            
+            entry['ft'].append(ft_stuff)
+            for k in ft_stuff:
+                ft_stuff[k] = ''
         if elem.tag == ns+'sequence' and found_entry == True and event == "end" and 'checksum' in elem.attrib:
             #sattribute = dict()
             #if elem.get('length'):
@@ -803,18 +856,67 @@ def compdb_sql(filepath='uniprot_sprot.xml.gz', dtype='sp'):
                 #sattribute['mass'] = elem.get('mass')
             #sequence = etree.SubElement(entry, 'sequence', sattribute)
             #sequence.text = elem.text
-            cursor.execute(ins_p+se1+ins_seq, (access_entry, elem.text))
-            dbcon.commit()
+            #cursor.execute(ins_p+se1+ins_seq, (access_entry, elem.text))
+            #dbcon.commit()
+            entry['seq'] = elem.text
         if elem.tag == ns+'entry' and found_entry == True and event == "end":
             count+=1
-            
-            print(count)
             found_entry = False
-            access_entry = ''
+            
+            print(count, end='\r')
+            if compact_only == True or compact == True:
+                
+                for acc in entry['accessions']:
+                    cursor.execute(ins_p+cn+ac1+ins_acc, (entry['entryName'], acc))
+                    dbcon.commit()
+                cursor.execute(ins_p+cn+fn1+ins_fn, (entry['entryName'], entry['fullName']))
+                dbcon.commit()
+                cursor.execute(ins_p+cn+ec1+ins_ec, (entry['entryName'], entry['ec']))
+                dbcon.commit()
+                cursor.execute(ins_p+cn+or1+ins_org, (entry['entryName'], entry['organismName']))
+                dbcon.commit()
+                for s in entry['subcellLoc']:
+                    cursor.execute(ins_p+cn+sl1+ins_sub_loc, (entry['entryName'], s['type'], s['location']))
+                    dbcon.commit()
+                for g in entry['go']:
+                    cursor.execute(ins_p+cn+go1+ins_go, (entry['entryName'], g['id'], g['evidence'], g['GOTerm']))
+                    dbcon.commit()
+                for f in entry['ft']:
+                    cursor.execute(ins_p+cn+ft1+ins_ft, (entry['entryName'], f['type'], f['position'], f['description']))
+                    dbcon.commit()
+                cursor.execute(ins_p+cn+se1+ins_seq, (entry['entryName'], entry['seq']))
+                dbcon.commit()
+            if compact_only == False:
+                for t in taxa_dict:
+                    if taxa_dict[t] == True:
+                        for acc in entry['accessions']:
+                            cursor.execute(ins_p+t+ac1+ins_acc, (entry['entryName'], acc))
+                            dbcon.commit()
+                        cursor.execute(ins_p+t+fn1+ins_fn, (entry['entryName'], entry['fullName']))
+                        dbcon.commit()
+                        cursor.execute(ins_p+t+ec1+ins_ec, (entry['entryName'], entry['ec']))
+                        dbcon.commit()
+                        cursor.execute(ins_p+t+or1+ins_org, (entry['entryName'], entry['organismName']))
+                        dbcon.commit()
+                        for s in entry['subcellLoc']:
+                            cursor.execute(ins_p+t+sl1+ins_sub_loc, (entry['entryName'], s['type'], s['location']))
+                            dbcon.commit()
+                        for g in entry['go']:
+                            cursor.execute(ins_p+t+go1+ins_go, (entry['entryName'], g['id'], g['evidence'], g['GOTerm']))
+                            dbcon.commit()
+                        for f in entry['ft']:
+                            cursor.execute(ins_p+t+ft1+ins_ft, (entry['entryName'], f['type'], f['position'], f['description']))
+                            dbcon.commit()
+                        cursor.execute(ins_p+t+se1+ins_seq, (entry['entryName'], entry['seq']))
+                        dbcon.commit()
+            
             #print(etree.tostring(entry, encoding='utf-8', pretty_print=True))
             #outfile.write(etree.tostring(entry, encoding='utf-8', pretty_print=True))
             elem.clear()
+            
+            
             #entry = etree.Element('entry')
+            entry = {'entryName':'', 'accessions':[], 'ec':'', 'fullName':'', 'organismName':'', 'subcellLoc':[], 'go':[], 'ft':[], 'seq':''}
             while elem.getprevious() is not None:
                 del elem.getparent()[0]
         if elem.tag == ns+'entry' and found_entry == False and event == "end":
@@ -822,7 +924,26 @@ def compdb_sql(filepath='uniprot_sprot.xml.gz', dtype='sp'):
             elem.clear()
             while elem.getprevious() is not None:
                 del elem.getparent()[0]
-                
+    
+    if compact_only == False:
+        for t in tables:
+            cursor.execute("""CREATE INDEX """+t+"""acc ON """+t+ac1+""" (accession)""")
+            dbcon.commit()
+            cursor.execute("""CREATE INDEX """+t+"""acc ON """+t+fn1+""" (entryName)""")
+            dbcon.commit()
+            cursor.execute("""CREATE INDEX """+t+"""acc ON """+t+ec1+""" (entryName)""")
+            dbcon.commit()
+            cursor.execute("""CREATE INDEX """+t+"""acc ON """+t+or1+""" (entryName)""")
+            dbcon.commit()
+            cursor.execute("""CREATE INDEX """+t+"""acc ON """+t+sl1+""" (entryName)""")
+            dbcon.commit()
+            cursor.execute("""CREATE INDEX """+t+"""acc ON """+t+go1+""" (entryName)""")
+            dbcon.commit()
+            cursor.execute("""CREATE INDEX """+t+"""acc ON """+t+ft1+""" (entryName)""")
+            dbcon.commit()
+            cursor.execute("""CREATE INDEX """+t+"""acc ON """+t+se1+""" (entryName)""")
+            dbcon.commit()
+        
     #outfile.write(b'</uniprot>')
     cursor.close()
     dbcon.close()
