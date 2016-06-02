@@ -22,6 +22,13 @@
             {% end %}
 		</optgroup>				
     </select>
+    <div class="caption"><p>Choose database type:</p></div>
+    <select style="width:200px; border:single" name="dtype">
+	    <optgroup label="Databases:">
+            <option>SwissProt</option>
+            <option>Trembl</option>
+		</optgroup>				
+    </select>
     <p>
     <span>General Options:</span><br>
 			<table border="0" width="200">
@@ -46,12 +53,15 @@
             <tr><td width="200"><span class=caption>Sequence features</span></td>
 					<td>
             <input type="checkbox"  name="sequencefeatures" value="ON"></td></tr>
-            <tr><td width="200"><span class=caption>Glycosylation sites(uncheck if selected Sequence features)</span></td>
+            <tr><td width="200"><span class=caption>Glycosylation sites</span></td>
 					<td>
             <input type="checkbox"  name="glycosylation" value="ON"></td></tr>
-            <tr><td width="200"><span class=caption>GOSTATS input file</span></td>
+            <tr><td width="200"><span class=caption>GSSTATS input file</span></td>
 					<td>
-            <input type="checkbox"  name="gsstats" checked="checked" value="ON"></td></tr>
+            <input type="checkbox"  name="gostats" checked="checked" value="ON"></td></tr>
+            <tr><td width="200"><span class=caption>MySQL</span></td>
+					<td>
+            <input type="checkbox"  name="mysql" value="ON"></td></tr>
 			</table>
 			
     <input type="submit" value="Upload" class="btn btn-default" />
