@@ -320,7 +320,53 @@ class UniparserProcess(tornado.web.RequestHandler):
                 pool.shutdown()
             
         self.render("uniparser2_result.html", title="Uniprot Parser Result", result=result,)
+
+class SWATHNormalize(tornado.web.RequestHandler):
+    def get(self):
+        #SWATHNormalize Upload site
+        self.render("snormal.html", title="SWATH Peptide Intensity Normalization",) 
+
+class SWATHNormalizeProcess(tornado.web.RequestHandler):
+    def post(self):
+        areapeptide = self.request.files['peptide'][0]
+        areaprotein = self.request.files['protein'][0]
+        areapeptide_n = areapeptide['filename']
+        areaprotein_n = areaprotein['filename']
         
+        # Check uploaded files' extension and save files, protein summary only.
+        if seqtasks.allowed_file(areapeptide_n) == 'True' and seqtasks.allowed_file(areaprotein_n) == 'True':
+            with open(os.path.join(comparesetting.UPLOAD_FOLDER, areapeptide_n), 'wb') as upload_file1, open(os.path.join(comparesetting.UPLOAD_FOLDER, areaprotein_n), 'wb') as upload_file2:
+                upload_file1.write(areapeptide['body'])
+                upload_file2.write(areaprotein['body'])
+            
+            entry=dict()
+            with open(os.path.join(comparesetting.UPLOAD_FOLDER, areaprotein_n), 'rt') as apro:
+                apro_reader = csv.DictReader(apro, dialect='excel', delimiter='\t')
+                for row in apro_reader:
+                    entry[row['Protein']] = row
+            #print(entry)    
+            with open(os.path.join(comparesetting.UPLOAD_FOLDER, areapeptide_n), 'rt') as apep, open(os.path.join(comparesetting.RESULTS_FOLDER, 'normalized_'+areapeptide_n), 'wt') as outpep:
+                apep_reader = csv.DictReader(apep, dialect='excel', delimiter='\t')
+                outpep_writer = csv.DictWriter(outpep, fieldnames=apep_reader.fieldnames, dialect='excel', delimiter='\t')
+                outpep_writer.writeheader()
+                for row in apep_reader:
+                    #print(row)
+                    temp_row = row
+                    if row['Protein'] in entry:
+                        for k in entry[row['Protein']]:
+                            if not k == 'Protein':
+                                if k in row:
+                                    #print(k)
+                                    if not row[k] == '' and not entry[row['Protein']][k] == '':
+                                        
+                                        #print(float(entry[row['Protein']][k]))
+                                        temp_row[k] = float(row[k])/float(entry[row['Protein']][k])
+                                        #print(temp_row[k])
+                                    if row[k] == '' or entry[row['Protein']][k] == '':
+                                        temp_row[k] = ''
+                                    
+                    outpep_writer.writerow(temp_row)
+        self.render("snormal_result.html", title="Normalization Result", output='normalized_'+areapeptide_n)
 settings = {
     "autoreload": True,
     "debug": True,
@@ -350,6 +396,8 @@ if __name__ == "__main__":
         (r"/job_result/(?P<channel_id>[^\/]+)/(?P<job_key>[^\/]+)?", GetResult),
         (r"/sca", SubcellLocAnalyze),
         (r"/sca/process", SubcellLocAnalyzeProcess),
+        (r"/snormal", SWATHNormalize),
+        (r"/snormal/process", SWATHNormalizeProcess),
     ], **settings)
     application.listen(8888)
     tornado.ioloop.IOLoop.current().start()
